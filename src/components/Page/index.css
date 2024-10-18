@@ -1,0 +1,7 @@
+.componments-page{
+    display: flex;
+    flex-direction: column;
+    background-color: aqua;
+    width: 100vw;
+    height: 100vh;
+}

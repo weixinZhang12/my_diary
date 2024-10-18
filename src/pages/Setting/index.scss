@@ -1,0 +1,11 @@
+.setting-content{
+    flex:1;
+    padding: 2vh 0vw;
+    background-color: var(--background-color);
+    .setting-content-basis-cell-group{
+        margin-top:2vh;
+    }
+    .setting-content-other-cell-group{
+        margin-top:2vh;
+    }
+}

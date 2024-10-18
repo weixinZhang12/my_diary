@@ -1,0 +1,19 @@
+
+.theme-navbar-rightText-buton{
+    width: 100%;
+    height: 100%;
+}
+.theme-content{
+    // padding: 2vh 3vw;
+    flex:1;
+    background-color: var(--background-color);
+    .theme-content-cell-group{
+        margin-top: 2vh;
+    }
+    .theme-content-cell-group-cell{
+        // margin-top: 2vh;
+        // padding: 2vh 2vw;
+        // border: 0.3vw solid;
+        // border-radius: 2vw;
+    }
+}
