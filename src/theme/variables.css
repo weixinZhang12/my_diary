@@ -37,6 +37,8 @@ body{
         --rv-cell-background-color: #181a1b;
         /* rv导航栏图标颜色 */
         --rv-nav-bar-icon-color:white;
+        /* 按钮边框宽度 */
+        --rv-button-border-width:0
     }
 }
 

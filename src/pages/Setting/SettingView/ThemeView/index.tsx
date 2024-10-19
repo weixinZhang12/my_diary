@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import './index.scss'
-import { Button, Cell, NavBar, Radio } from 'react-vant';
+import { Cell, NavBar, Radio } from 'react-vant';
 import Page from '../../../../components/Page';
 import { LanguageList } from '../../../../lang/langManger';
 import { useNavigate } from 'react-router-dom';
+import { open } from '@tauri-apps/plugin-dialog';
+import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import preferenceUtils from '../../../../utils/prepferenceUtil';
 interface FormInter {
   selected_language: LanguageList
 }
@@ -25,31 +28,37 @@ function RightDom() {
 
   const handleFolderSelect = async () => {
     try {
-      // 打开文件夹选择对话框
-      const dirHandle = await (window as any).showDirectoryPicker();
-      // 遍历文件夹，寻找 index.css 文件
-      for await (const [name, handle] of dirHandle) {
-        // 如果类型为文件并且文件为index.css
-        if (handle.kind === 'file' && name === 'index.css') {
-          // 获取该文件
-          const file = await handle.getFile();
-          // 内容为文件内容
-          const content = await file.text();
-          setCssContent(content);  // 保存 CSS 内容
-          applyGlobalStyles(content);  // 应用全局样式
-          // break;  // 找到 index.css 后停止遍历
-        }
-        if (handle.kind === 'file' && name === 'index.js') {
-          // 获取该文件
-          const file = await handle.getFile();
-          // 内容为文件内容
-          const content = await file.text();
-          new Function(content)()
-          break;  // 找到 index.css 后停止遍历
-        }
+      // 打开文件选择对话框
+      const filepath = await open({
+        multiple: false,
+        directory: false
+      })
+      // 用户不做出选择结束选取，默认无操作
+      if (filepath === null) {
+        return
       }
+      console.log(filepath);
+      const content = await readTextFile(filepath)
+      // 匹配最后一个文件名
+      const fileName = filepath.match(/[^/]+$/)?.[0];
+      if (fileName === undefined) {
+        return
+      }
+      // 保存到用户的theme文件夹内部
+      await writeTextFile('my_diary/theme/' + fileName, content, { baseDir: BaseDirectory.Document })
+      let userConfig = await preferenceUtils.getUserConfig()
+      userConfig.theme = fileName
+      console.log(content);
+      // 将用户选择的文件名保存到用户配置中
+      await preferenceUtils.setUserConfig(userConfig)
+     
+      setCssContent(content);  // 保存 CSS 内容
+      applyGlobalStyles(content);  // 应用全局样式
+
+
+
     } catch (error) {
-      console.error('文件夹选择失败', error);
+      console.error('发生错误', error);
     }
   };
   const applyGlobalStyles = (css: string) => {
@@ -73,7 +82,7 @@ function RightDom() {
 function Content() {
   // 渲染列表
   const [themeList, setThemeList] = useState<ThemeListInter[]>([{
-    name: 'xxxx',
+    name: '默认主题',
     isSelected: true
   }])
 
@@ -81,7 +90,9 @@ function Content() {
     {themeList.map((item) => {
       // 用户导入的文件列表
       return <Cell.Group card className='theme-content-cell-group' key={item.name} >
-        <Cell title={<CellLeftDom name={item.name} isSelected={item.isSelected} key={item.name} />} className='theme-content-cell-group-cell' />
+        <Cell title={''} className='theme-content-cell-group-cell' >
+          <CellLeftDom name='xxx' isSelected={false}/>
+        </Cell>
       </Cell.Group>
     })}
 

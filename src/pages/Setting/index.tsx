@@ -1,5 +1,4 @@
 import Page from '../../components/Page';
-import { useState } from 'react';
 import './index.scss'
 import { Cell, NavBar } from 'react-vant';
 import { lang } from '../../lang/langManger';
@@ -9,7 +8,6 @@ function Content() {
   const nav = useNavigate()
   function toLanguageView() {
     nav('/language')
-
   }
   return <div className="setting-content">
     <Cell.Group card className='setting-content-user-cell-group'>
@@ -21,7 +19,6 @@ function Content() {
     <Cell.Group card className='setting-content-other-cell-group'>
       <Cell icon={<CommentCircleO />} title={lang.setting_language} onClick={
         toLanguageView
-
       }></Cell>
     </Cell.Group>
   </div>

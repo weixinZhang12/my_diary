@@ -29,7 +29,7 @@ function Content() {
     console.log(getResult);
     // // 保存到用户配置
     await preferenceUtils.setUserConfig(getResult)
-    await initUtils.initConfig()
+    await initUtils.init()
     window.location.reload()
 
   }

@@ -12,16 +12,13 @@ const preferenceUtils = {
             return configContent
         } catch (error) {
             console.error(error);
-
             // 创建用户配置
             await this.setUserConfig(userConfig)
             // 读取用户配置
-            const configContentString = await readTextFile('/my_diary/config.json', { baseDir: BaseDirectory.Document })
+            const configContentString = await readTextFile('my_diary/config.json', { baseDir: BaseDirectory.Document })
             let configContent = JSON.parse(configContentString) as UserConfig
             return configContent
         }
-
-      
     },
     async setUserConfig(data: UserConfig) {
         try {
@@ -45,7 +42,6 @@ const preferenceUtils = {
                 await mkdir('my_diary', { baseDir: BaseDirectory.Document })
             } catch (error) {
                 console.error(error)
-
                 Dialog.show({
                     message: '创建目录失败' + error
                 })

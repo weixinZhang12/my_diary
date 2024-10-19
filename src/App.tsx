@@ -5,7 +5,8 @@ import './theme/variables.css'
 import ThemeView from "./pages/Setting/SettingView/ThemeView";
 import Setting from "./pages/Setting";
 import LanguageView from "./pages/Setting/SettingView/LanguageView";
-
+import initUtils from "./utils/initUtils";
+await initUtils.init()
 function App() {
   
   return (
