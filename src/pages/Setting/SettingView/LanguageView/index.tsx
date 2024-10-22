@@ -12,7 +12,7 @@ interface FormInter {
 
 function Content() {
   const [form] = Form.useForm()
-  const [selectedLanguage, setSelectedLanguage] = useState<LanguageList>('zh')
+  const [selectedLanguage, _setSelectedLanguage] = useState<LanguageList>('zh')
   useEffect(() => {
     async function setLang() {
       const user_selected_language = (await preferenceUtils.getUserConfig()).lang

@@ -1,5 +1,4 @@
 import './index.css';
-import { Button, NavBar } from 'react-vant';
 import { ReactNode } from 'react';
 export interface Slot {
   children: ReactNode

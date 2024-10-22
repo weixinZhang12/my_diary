@@ -13,6 +13,7 @@ export interface Lang {
     setting_language: string
     setting_language_zh: string
     setting_language_en: string
+    setting_navbar_title:string
 }
 // 此处内容需与langerManger内相同
 export type LanguageList='zh'|'en'

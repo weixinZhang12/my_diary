@@ -5,13 +5,15 @@ http://ionicframework.com/docs/theming/ */
     margin: 0;
 
 }
+
 /* 默认浅色背景 */
 :root {
     --background-color: #f6f8fc;
-    --icon-color:#000;
-    --rv-floating-ball-size:13vw;
+    --icon-color: #000;
+    --rv-floating-ball-size: 13vw;
 }
-body{
+
+body {
     background: var(--background-color);
 }
 
@@ -27,18 +29,52 @@ body{
         /* 默认边框颜色 */
         --rv-border-color: white;
         /* 深色模式下的自定义图标颜色 */
-        --icon-color:#fff;
-        --rv-card-header-color:#fff;
+        --icon-color: #fff;
+        --rv-card-header-color: #fff;
         /* rv卡片背景色 */
         --rv-card-background-color: #181a1b;
         /* 卡片字体颜色 */
-        --rv-card-color:#fff;
+        --rv-card-color: #fff;
         /* rv单元格背景色 */
         --rv-cell-background-color: #181a1b;
         /* rv导航栏图标颜色 */
-        --rv-nav-bar-icon-color:white;
+        --rv-nav-bar-icon-color: white;
         /* 按钮边框宽度 */
-        --rv-button-border-width:0
+        --rv-button-border-width: 0;
+        --rv-dialog-background-color: #181a1b;
+        --rv-dialog-has-title-message-text-color: white;
+    }
+
+    .rv-dialog__message {
+        color: white;
+    }
+
+    .rv-dialog__confirm {
+        background-color: #181a1b;
+    }
+    .rv-dialog__cancel {
+        background-color: #181a1b;
+    }
+    
+    
+
+    button {
+        background-color: #181a1b;
+        /* outline: none; */
+        border: 0;
+        border-radius: 2vw;
+    }
+
+    .vditor-toolbar {
+        background-color: var(--background-color) !important;
+    }
+
+    .vditor-reset {
+        background-color: var(--background-color) !important;
+        color: var(--rv-text-color) !important;
+    }
+    .vditor-hint--current{
+        background-color: var(--background-color) !important;
     }
 }
 
@@ -47,6 +83,6 @@ body{
     :root {
         --background-color: #f6f8fc;
         /* rv导航栏图标颜色 */
-        --rv-nav-bar-icon-color:black;
+        --rv-nav-bar-icon-color: black;
     }
-}       
+}

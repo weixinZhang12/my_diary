@@ -1,30 +1,85 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './index.scss'
-import { Cell, NavBar, Radio } from 'react-vant';
+import { Button, Cell, NavBar, Radio, SwipeCell } from 'react-vant';
 import Page from '../../../../components/Page';
-import { LanguageList } from '../../../../lang/langManger';
 import { useNavigate } from 'react-router-dom';
 import { open } from '@tauri-apps/plugin-dialog';
-import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readDir, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import preferenceUtils from '../../../../utils/prepferenceUtil';
-interface FormInter {
-  selected_language: LanguageList
-}
-interface CellLeftDomInter {
-  name: string
-  isSelected: boolean
-}
+import { BrushO } from '@react-vant/icons';
+// interface FormInter {
+//   selected_language: LanguageList
+// }
+// interface CellLeftDomInter {
+//   name: string
+//   isSelected: boolean
+// }
 interface ThemeListInter {
+  title: string
   name: string
-  isSelected: boolean
+  // isSelected: boolean
 }
-function CellLeftDom(props: CellLeftDomInter) {
-  return <Radio.Group value={props.isSelected ? 'radio' : ''}>
-    <Radio name={'radio'} >{props.name}</Radio>
+function CellLeftDom() {
+
+  const [selectedName, setSelectedName] = useState('default')
+  const [themeList, setThemeList] = useState<ThemeListInter[]>([])
+  async function pushUserTheme() {
+    try {
+      // 获取查询到的结果
+      const entries = await readDir('my_diary/theme', { baseDir: BaseDirectory.AppData })
+      console.log(entries);
+      let themeList: ThemeListInter[] = []
+      for (const item of entries) {
+        console.log(item, '344343434343');
+        themeList.push({ name: item.name, title: item.name })
+      }
+      // 渲染到列表
+      setThemeList([...themeList])
+      const userConfig = await preferenceUtils.getUserConfig()
+      setSelectedName(userConfig.theme)
+      return entries
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function setSelectedTheme(themeName: string) {
+    setSelectedName(themeName)
+    const userConfig = await preferenceUtils.getUserConfig()
+    userConfig.theme = themeName
+    await preferenceUtils.setUserConfig(userConfig)
+    window.location.reload()
+  }
+  useEffect(() => {
+    pushUserTheme()
+  }, [])
+  return <Radio.Group value={selectedName}>
+    <Cell.Group card>
+      <Cell
+        clickable
+        title='默认'
+        icon={<BrushO />}
+        onClick={() => setSelectedTheme('default')}
+        rightIcon={<Radio name='default' />}
+      />
+      {
+        themeList.map((item) => {
+          return <SwipeCell key={item.name} stopPropagation={false} rightAction={<Button square type='danger'>删除</Button>}>
+            <Cell
+              clickable
+              title={item.title}
+              icon={<BrushO />}
+              onClick={() => setSelectedTheme(item.name)}
+              rightIcon={<Radio name={item.name} />}
+            />
+          </SwipeCell>
+        })
+      }
+
+    </Cell.Group>
   </Radio.Group>
 }
 function RightDom() {
-  const [cssContent, setCssContent] = useState<string | null>(null);
+  const [_cssContent, setCssContent] = useState<string | null>(null);
 
   const handleFolderSelect = async () => {
     try {
@@ -45,18 +100,15 @@ function RightDom() {
         return
       }
       // 保存到用户的theme文件夹内部
-      await writeTextFile('my_diary/theme/' + fileName, content, { baseDir: BaseDirectory.Document })
+      await writeTextFile('my_diary/theme/' + fileName, content, { baseDir: BaseDirectory.AppData })
       let userConfig = await preferenceUtils.getUserConfig()
       userConfig.theme = fileName
       console.log(content);
       // 将用户选择的文件名保存到用户配置中
       await preferenceUtils.setUserConfig(userConfig)
-     
+
       setCssContent(content);  // 保存 CSS 内容
       applyGlobalStyles(content);  // 应用全局样式
-
-
-
     } catch (error) {
       console.error('发生错误', error);
     }
@@ -80,22 +132,10 @@ function RightDom() {
 
 // 内容区域
 function Content() {
-  // 渲染列表
-  const [themeList, setThemeList] = useState<ThemeListInter[]>([{
-    name: '默认主题',
-    isSelected: true
-  }])
+
 
   return <div className="theme-content">
-    {themeList.map((item) => {
-      // 用户导入的文件列表
-      return <Cell.Group card className='theme-content-cell-group' key={item.name} >
-        <Cell title={''} className='theme-content-cell-group-cell' >
-          <CellLeftDom name='xxx' isSelected={false}/>
-        </Cell>
-      </Cell.Group>
-    })}
-
+    <CellLeftDom />
   </div>
 }
 const ThemeView: React.FC = () => {
@@ -107,7 +147,7 @@ const ThemeView: React.FC = () => {
   return (
     // 页面
     <Page>
-      <NavBar title={'语言'} onClickLeft={toSetting} rightText={<RightDom />} />
+      <NavBar title={'主题'} onClickLeft={toSetting} rightText={<RightDom />} />
       <Content />
     </Page>
   );

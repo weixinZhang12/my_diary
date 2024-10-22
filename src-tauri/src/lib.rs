@@ -1,3 +1,5 @@
+use std::path::Path;
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -6,7 +8,6 @@ fn greet(name: &str) -> String {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let static_dir = warp::fs::dir("/home/dreamya/桌面/test_theme"); // 你的静态资源目录
 
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -15,9 +16,19 @@ pub fn run() {
 
             // 启动 wrap 服务器
             tokio::spawn(async move {
-                warp::serve(static_dir)
-                    .run(([127, 0, 0, 1], 3030)) // 服务器监听 127.0.0.1:3030
-                    .await;
+                let folder_path=Path::new("/home/dreamya/桌面/test_theme");
+                if folder_path.exists()&&folder_path.is_dir(){
+                    println!("文件夹存在");
+                    let static_dir = warp::fs::dir("/home/dreamya/桌面/test_theme"); // 你的静态资源目录
+
+                    warp::serve(static_dir)
+                        .run(([127, 0, 0, 1], 3030)) // 服务器监听 127.0.0.1:3030
+                        .await;
+                }
+                else {
+                    println!("路径不存在")
+                }
+   
             });
 
             Ok(())

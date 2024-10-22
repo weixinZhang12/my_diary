@@ -1,23 +1,24 @@
 import styles from './index.module.scss'
 import { Button, Card, Cell, Empty, Flex, FloatingBall, NavBar, Popup, Typography } from 'react-vant';
 import Page from '../../components/Page';
-import { CSSProperties, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import data from '../../utils/date';
 import { AddO, BrushO, PhotoO, SettingO } from '@react-vant/icons';
 import Menu from '../../assets/images/Menu';
 import './index.scss'
 import { lang } from '../../lang/langManger';
 import { useNavigate } from 'react-router-dom';
-import { BaseDirectory, readTextFile } from '@tauri-apps/plugin-fs';
 import preferenceUtils from '../../utils/prepferenceUtil';
-const css: CSSProperties = {
-  background: ''
-}
+
 
 interface LeftPropsInter {
   isShow: boolean,
   setShow: () => void
 
+}
+interface DiaryInter{
+  title:string
+  content:string
 }
 
 interface LeftDomInter {
@@ -62,34 +63,36 @@ function LeftPopup(props: LeftPropsInter) {
 }
 // 内容区域
 function Content() {
-  const [cardList] = useState(
+  const nav = useNavigate()
+  const [cardList] = useState<DiaryInter[]>(
     [
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。1',
-
+        title: 'q'
       },
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。11',
-
+        title: 'qq'
       },
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。111',
-
+        title: 'qqq'
       },
       {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。1111'
+        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。1111',
+        title: 'qqqq'
       },
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。111111',
-
+        title: 'qqq2323q'
       },
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。11111111',
-
+        title: 'qqqqq'
       },
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。111111111111',
-
+        title: 'qqqqwqwqwq'
       },
     ]
   )
@@ -102,11 +105,13 @@ function Content() {
     </FloatingBall>
     {/* 笔记卡片列表 */}
     {/* 当笔记卡片数量为零时自动显示空状态 */}
-    {cardList.length === 0 ? <Empty description={lang.home_content_enpty_text} />
-      : <div className="home-content-container-card-container">
+    {cardList.length === 0 ?
+      <Empty description={lang.home_content_enpty_text} />
+      :
+      <div className="home-content-container-card-container">
 
         {cardList.map((item) => {
-          return <Card round key={item.content} className='home-content-container-card-container-card'>
+          return <Card round key={item.title} onClick={() => nav('/edit/'+item.title)} className='home-content-container-card-container-card'>
             <Card.Body>
               <Typography.Text ellipsis={4}>{item.content}</Typography.Text>
             </Card.Body>
@@ -127,11 +132,11 @@ const Home: React.FC = () => {
     console.log(await preferenceUtils.getUserConfig());
     const userAgent = navigator.userAgent;
     console.log(userAgent);
-    
+
   }
-  useEffect(()=>{
+  useEffect(() => {
     aaa()
-  },[])
+  }, [])
   aaa()
   return (
     // 页面

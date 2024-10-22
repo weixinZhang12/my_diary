@@ -6,6 +6,7 @@ import ThemeView from "./pages/Setting/SettingView/ThemeView";
 import Setting from "./pages/Setting";
 import LanguageView from "./pages/Setting/SettingView/LanguageView";
 import initUtils from "./utils/initUtils";
+import Edit from "./pages/Edit";
 await initUtils.init()
 function App() {
   
@@ -16,6 +17,7 @@ function App() {
         <Route path="/setting" element={<Setting />} />
         <Route path="/language" element={<LanguageView />} />
         <Route path="/theme" element={<ThemeView />} />
+        <Route path="/edit/:id" element={<Edit />} />
       </Routes>
     </BrowserRouter>
   );

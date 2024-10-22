@@ -11,15 +11,15 @@ function Content() {
   }
   return <div className="setting-content">
     <Cell.Group card className='setting-content-user-cell-group'>
-      <Cell icon={<UserO />} title={lang.setting_userinfo}></Cell>
+      <Cell icon={<UserO />} title={lang.setting_userinfo} className='setting-content-user-cell-group-cell'></Cell>
     </Cell.Group>
     <Cell.Group card className='setting-content-basis-cell-group'>
-      <Cell icon={<MedalO />} title={lang.setting_style}></Cell>
+      <Cell icon={<MedalO />} title={lang.setting_style} className='setting-content-basis-cell-group-cell'></Cell>
     </Cell.Group>
     <Cell.Group card className='setting-content-other-cell-group'>
-      <Cell icon={<CommentCircleO />} title={lang.setting_language} onClick={
+      <Cell icon={<CommentCircleO />}  title={lang.setting_language} onClick={
         toLanguageView
-      }></Cell>
+      } className='setting-content-other-cell-group-cell'></Cell> 
     </Cell.Group>
   </div>
 }
@@ -32,7 +32,7 @@ const Setting: React.FC = () => {
   return (
     // 页面
     <Page>
-      <NavBar title={'设置'} onClickLeft={returnHome} />
+      <NavBar title={lang.setting_navbar_title} onClickLeft={returnHome} />
       <Content />
     </Page>
   );

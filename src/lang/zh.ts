@@ -11,6 +11,7 @@ const zh:Lang={
     setting_about: "关于",
     setting_language: "语言",
     setting_language_zh: "中文",
-    setting_language_en: "English"
+    setting_language_en: "English",
+    setting_navbar_title: "设置"
 }
 export default zh

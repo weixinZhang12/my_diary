@@ -11,6 +11,7 @@ const en:Lang={
     setting_about: "About",
     setting_language: "Language",
     setting_language_zh: "中文",
-    setting_language_en: "English"
+    setting_language_en: "English",
+    setting_navbar_title: "Setting"
 }
 export default en

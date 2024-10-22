@@ -1,5 +1,4 @@
 import Page from '../Page';
-import { useState } from 'react';
 import './index.scss'
 import { NavBar } from 'react-vant';
 

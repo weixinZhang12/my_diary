@@ -19,9 +19,15 @@
       "allow": [
         {
           "path": "$DOCUMENT/**"
+        },
+        {
+          "path": "$AppData/**"
         }
       ]
     },
+    "fs:allow-appdata-read-recursive",
+    "fs:allow-appdata-write-recursive",
+    "fs:allow-appdata-meta-recursive",
     "dialog:default"
   ]
 }
