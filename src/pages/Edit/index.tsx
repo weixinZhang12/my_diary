@@ -5,8 +5,10 @@ import { Dialog, NavBar } from 'react-vant';
 import { useEffect, useState } from 'react';
 import Vditor from 'vditor';
 import '../../theme/less/index.less'
-import { BaseDirectory, exists, mkdir, writeTextFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, exists, mkdir } from '@tauri-apps/plugin-fs';
 import date from '../../utils/date';
+import fs from '../../utils/fs';
+import { DiaryContentInter } from '../../types';
 
 function Content() {
   return <div className="edit-content" >
@@ -18,7 +20,7 @@ const Edit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [vditor, setVditor] = useState<Vditor | null>(null)
   // const [vditor, setVditor] = useState<Vditor | null>(null)
-
+  // 初始化日记以及设置日记内容
   async function setContent() {
     try {
       // 获取容器
@@ -43,7 +45,8 @@ const Edit: React.FC = () => {
         },
         height: contenth.offsetHeight,
         // 初始化之后调用
-        after() {
+        async after() {
+
           newvditor.setValue('sdsdsdsdsdsdsdds')
           setVditor(newvditor)
         },
@@ -74,25 +77,55 @@ const Edit: React.FC = () => {
   }
   useEffect(() => {
     setContent()
+
   }, [])
-  async function mkNowDateTimeDir(date: string) {
+  // 创建带日期的日记文件夹
+  async function mkDateTimeDir(date: string) {
     let nowDateTime = date
-    let path='my_diary/diary/'+nowDateTime
+    let path = 'my_diary/diary/' + nowDateTime
     if (!await exists(path, { baseDir: BaseDirectory.AppData })) {
       mkdir(path, { baseDir: BaseDirectory.AppData })
     }
   }
-  async function writeContent(date: string, data: string) {
-    writeTextFile('my_diary/diary/'+date+'/' + date, data, { baseDir: BaseDirectory.AppData })
+  // BUG 使用官方的函数无法正常使用，因此是月使用的是自己封装的函数
+  // 写入指定日期的日记文件内容
+  async function writeDiaryContent(date: string, data: string) {
+    let path = 'my_diary/diary/' + date + '/' + date + '.json'
+    console.log(path);
+    let contentObject: DiaryContentInter = {
+      header: {
+        weather: null,
+        emotion: null,
+        first_create_time: date
+      },
+      content: data,
+      title: null
+    }
+    let contentObjectString = JSON.stringify(contentObject)
+    await fs.writeTextToFile(path, contentObjectString)
   }
   async function toHome() {
     Dialog.confirm({
       message: '是否保存',
+      // 确认之后返回到主页面，，同时创建文件夹，将内容填充到里面的文件
       async onConfirm() {
-        nav('/')
-        let nowDateTime = date.getDateTime()
-        await mkNowDateTimeDir(nowDateTime)
+        try {
+          // 先导航到主页面,然后创建用户文件夹,存放用户笔记文件
+          nav('/')
+          let nowDateTime = date.getDateTime()
+          // 创建当前时间笔记文件夹
+          await mkDateTimeDir(nowDateTime)
+          if (vditor === null) {
+            return
+          }
+          // 获取用户输入的内容
+          let content = vditor.getValue()
+          // 写入内容到文件内
+          await writeDiaryContent(nowDateTime, content)
 
+        } catch (error) {
+          console.error(error)
+        }
       },
       onCancel() {
         nav('/')

@@ -9,6 +9,8 @@ import './index.scss'
 import { lang } from '../../lang/langManger';
 import { useNavigate } from 'react-router-dom';
 import preferenceUtils from '../../utils/prepferenceUtil';
+import { BaseDirectory, readDir, readTextFile } from '@tauri-apps/plugin-fs';
+import { DiaryContentInter } from '../../types';
 
 
 interface LeftPropsInter {
@@ -16,9 +18,9 @@ interface LeftPropsInter {
   setShow: () => void
 
 }
-interface DiaryInter{
-  title:string
-  content:string
+interface DiaryInter {
+  title: string
+  content: string
 }
 
 interface LeftDomInter {
@@ -64,38 +66,38 @@ function LeftPopup(props: LeftPropsInter) {
 // 内容区域
 function Content() {
   const nav = useNavigate()
-  const [cardList] = useState<DiaryInter[]>(
+  const [cardList] = useState<DiaryContentInter[]>(
     [
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。1',
-        title: 'q'
+        title: 'q',
+        header: {
+          weather: null,
+          emotion: null,
+          first_create_time: ''
+        }
       },
-      {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。11',
-        title: 'qq'
-      },
-      {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。111',
-        title: 'qqq'
-      },
-      {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。1111',
-        title: 'qqqq'
-      },
-      {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。111111',
-        title: 'qqq2323q'
-      },
-      {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。11111111',
-        title: 'qqqqq'
-      },
-      {
-        content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。111111111111',
-        title: 'qqqqwqwqwq'
-      },
+
     ]
   )
+  async function getDiaryList() {
+    // 读取diary目录内的文件目录,然后遍历这些目录,找到里面的日记json文件,读取内部内容
+    let diaryAllDirList = await readDir('my_diary/diary', { baseDir: BaseDirectory.AppData })
+    // console.log(diaryAllDirList);
+    for (const dir of diaryAllDirList) {
+      // dir为每天日记目录
+      let diaryDir = await readDir('my_diary/diary/' + dir.name, { baseDir: BaseDirectory.AppData })
+      console.log(diaryDir,'diaryDir');
+      let diaryContent = await readTextFile('my_diary/diary/'+dir.name+'/'+dir.name+'.json',{baseDir:BaseDirectory.AppData})
+      console.log(diaryContent,'diaryContent');
+      
+
+    }
+
+  }
+  useEffect(() => {
+    getDiaryList()
+  }, [])
   return <div className="home-content-container">
     {/* 悬浮窗 */}
     <FloatingBall offset={{ right: 30, bottom: 70 }} draggable={false} adsorb={false}>
@@ -111,7 +113,7 @@ function Content() {
       <div className="home-content-container-card-container">
 
         {cardList.map((item) => {
-          return <Card round key={item.title} onClick={() => nav('/edit/'+item.title)} className='home-content-container-card-container-card'>
+          return <Card round key={item.title} onClick={() => nav('/edit/' + item.title)} className='home-content-container-card-container-card'>
             <Card.Body>
               <Typography.Text ellipsis={4}>{item.content}</Typography.Text>
             </Card.Body>
