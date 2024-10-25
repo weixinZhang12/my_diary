@@ -1,7 +1,7 @@
 import styles from './index.module.scss'
-import { Card, Empty, Flex, FloatingBall, Lazyload, NavBar, Typography } from 'react-vant';
+import { Card, Empty, Flex, FloatingBall, NavBar, Typography } from 'react-vant';
 import Page from '../../components/Page';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import data from '../../utils/date';
 import { AddO } from '@react-vant/icons';
 import Menu from '../../assets/images/Menu';
@@ -12,12 +12,12 @@ import { BaseDirectory, readDir, readTextFile } from '@tauri-apps/plugin-fs';
 import { DiaryContentInter } from '../../types';
 import LeftPopup from './LeftPopup';
 import MyCalendar from './MyCalendar';
-import useSta from '../../hooks/useSta';
+import useValue, { Value } from '../../hooks/useValue';
 
 
 
 interface LeftDomInter {
-  setShow: () => void
+  isShow: Value<boolean>
 }
 
 // 左侧边栏
@@ -26,10 +26,10 @@ interface LeftDomInter {
 
 // 主页面
 const Home: React.FC = () => {
-  const [isShowPopup, setIsShowPopup] = useState(false)
+  const isShowPopup= useValue(false)
   const nav = useNavigate()
-  const isShowCalendar=useSta(false)
-  const [cardList, setCardList] = useState<DiaryContentInter[]>(
+  const isShowCalendar=useValue(false)
+  const cardList = useValue<DiaryContentInter[]>(
     [
       {
         content: 'React Vant 是一套轻量、可靠的移动端 React 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用，使用过程中发现任何问题都可以提 Issue 给我们，当然，我们也非常欢迎你给我们发 PR。1',
@@ -55,20 +55,18 @@ const Home: React.FC = () => {
       diaryList.push(diaryContent)
 
     }
-    setCardList([...diaryList])
+    cardList.value=diaryList
   }
   useEffect(() => {
     getDiaryList()
   }, [])
 
-  function setShow() {
-    setIsShowPopup(!isShowPopup)
-  }
+ 
   function LeftDom(props: LeftDomInter) {
     // const date=useRef(new Date())
     return (
       <div className={styles['left-nav-container']}>
-        <Menu onClick={props.setShow} />
+        <Menu onClick={()=>props.isShow.value=true} />
         <button className='home-left-nav-container-button' onClick={()=>isShowCalendar.value=!isShowCalendar.value}>{data.getNowDate()}</button>
       </div>
     )
@@ -77,10 +75,10 @@ const Home: React.FC = () => {
     // 页面
     <Page>
       {/* 导航栏 */}
-      <NavBar leftText={<LeftDom setShow={setShow} />} />
+      <NavBar leftText={<LeftDom isShow={isShowPopup} />} />
       <MyCalendar isShow={isShowCalendar.value}/>
       {/* 侧边栏 */}
-      <LeftPopup isShow={isShowPopup} setShow={setShow} />
+      <LeftPopup isShow={isShowPopup}  />
       {/* 内容区域 */}
       <div className="home-content-container">
         {/* 悬浮窗 */}
@@ -91,12 +89,12 @@ const Home: React.FC = () => {
         </FloatingBall>
         {/* 笔记卡片列表 */}
         {/* 当笔记卡片数量为零时自动显示空状态 */}
-        {cardList.length === 0
+        {cardList.value.length === 0
           ?
           <Empty description={lang.home_content_enpty_text} />
           :
           <div className="home-content-container-card-container">
-            {cardList.map((item) => {
+            {cardList.value.map((item) => {
               return <Card round key={item.header.first_create_time} onClick={() => nav('/edit/' + item.header.first_create_time)} className='home-content-container-card-container-card'>
                 <Card.Body>
                   <Typography.Text ellipsis={4}>{item.content}</Typography.Text>

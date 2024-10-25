@@ -9,6 +9,7 @@ import { BaseDirectory, exists, mkdir, readTextFile } from '@tauri-apps/plugin-f
 // import date from '../../utils/date';
 import fs from '../../utils/fs';
 import { DiaryContentInter } from '../../types';
+import useValue from '../../hooks/useValue';
 
 
 const Edit: React.FC = () => {
@@ -20,7 +21,7 @@ const Edit: React.FC = () => {
     })
     return
   }
-  const [vditor, setVditor] = useState<Vditor | null>(null)
+  const vditor = useValue<Vditor | null>(null)
   // const [vditor, setVditor] = useState<Vditor | null>(null)
   // 初始化日记以及设置日记内容
   async function setContent() {
@@ -55,7 +56,7 @@ const Edit: React.FC = () => {
         async after() {
 
           newvditor.setValue(diaryContent.content)
-          setVditor(newvditor)
+          vditor.value=newvditor
         },
         toolbar: [
           'emoji',
@@ -121,11 +122,11 @@ const Edit: React.FC = () => {
           // let nowDateTime = date.getDateTime()
           // 创建当前时间笔记文件夹
           await mkDateTimeDir(id)
-          if (vditor === null) {
+          if (vditor.value === null) {
             return
           }
           // 获取用户输入的内容
-          let content = vditor.getValue()
+          let content = vditor.value.getValue()
           console.log(content, '182');
           // 写入内容到文件内
           await writeDiaryContent(id, content)

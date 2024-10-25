@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './index.scss'
 import { Button, Form, NavBar, Radio } from 'react-vant';
 import Page from '../../../../components/Page';
@@ -6,13 +6,14 @@ import { lang, LanguageList } from '../../../../lang/langManger';
 import preferenceUtils from '../../../../utils/prepferenceUtil';
 import initUtils from '../../../../utils/initUtils';
 import { useNavigate } from 'react-router-dom';
+import useValue from '../../../../hooks/useValue';
 interface FormInter {
   selected_language: LanguageList
 }
 
 function Content() {
   const [form] = Form.useForm()
-  const [selectedLanguage, _setSelectedLanguage] = useState<LanguageList>('zh')
+  const selectedLanguage = useValue<LanguageList>('zh')
   useEffect(() => {
     async function setLang() {
       const user_selected_language = (await preferenceUtils.getUserConfig()).lang
@@ -38,7 +39,7 @@ function Content() {
   return <div className="setting-language-content">
     <Form
       initialValues={{
-        selected_language: selectedLanguage
+        selected_language: selectedLanguage.value
       }}
       form={form}
       onFinish={onFinish}
