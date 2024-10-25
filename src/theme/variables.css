@@ -3,7 +3,7 @@ http://ionicframework.com/docs/theming/ */
 
 * {
     margin: 0;
-
+    box-sizing: border-box;
 }
 
 /* 默认浅色背景 */
@@ -52,17 +52,24 @@ body {
     .rv-dialog__confirm {
         background-color: #181a1b;
     }
+
     .rv-dialog__cancel {
         background-color: #181a1b;
     }
-    
-    
+
+    .home-left-nav-container-button {
+        color: white;
+        width: 100%;
+        border: 0;
+    }
+
 
     button {
         background-color: #181a1b;
         /* outline: none; */
         border: 0;
         border-radius: 2vw;
+        color: white;
     }
 
     .vditor-toolbar {
@@ -73,7 +80,8 @@ body {
         background-color: var(--background-color) !important;
         color: var(--rv-text-color) !important;
     }
-    .vditor-hint--current{
+
+    .vditor-hint--current {
         background-color: var(--background-color) !important;
     }
 }
@@ -84,5 +92,11 @@ body {
         --background-color: #f6f8fc;
         /* rv导航栏图标颜色 */
         --rv-nav-bar-icon-color: black;
+    }
+
+    .home-left-nav-container-button {
+        /* color: white; */
+        width: 100%;
+        border: 0;
     }
 }

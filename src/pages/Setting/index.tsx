@@ -4,12 +4,20 @@ import { Cell, NavBar } from 'react-vant';
 import { lang } from '../../lang/langManger';
 import { CommentCircleO, MedalO, UserO } from '@react-vant/icons';
 import { useNavigate } from 'react-router-dom';
-function Content() {
+
+const Setting: React.FC = () => {
   const nav = useNavigate()
   function toLanguageView() {
     nav('/language')
   }
-  return <div className="setting-content">
+  function returnHome() {
+    nav('/')
+  }
+  return (
+    // 页面
+    <Page>
+      <NavBar title={lang.setting_navbar_title} onClickLeft={returnHome} />
+      <div className="setting-content">
     <Cell.Group card className='setting-content-user-cell-group'>
       <Cell icon={<UserO />} title={lang.setting_userinfo} className='setting-content-user-cell-group-cell'></Cell>
     </Cell.Group>
@@ -21,20 +29,7 @@ function Content() {
         toLanguageView
       } className='setting-content-other-cell-group-cell'></Cell> 
     </Cell.Group>
-  </div>
-}
-const Setting: React.FC = () => {
-  const nav = useNavigate()
-
-  function returnHome() {
-    nav('/')
-  }
-  return (
-    // 页面
-    <Page>
-      <NavBar title={lang.setting_navbar_title} onClickLeft={returnHome} />
-      <Content />
-    </Page>
+  </div>    </Page>
   );
 };
 

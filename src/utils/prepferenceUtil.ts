@@ -1,6 +1,7 @@
 import userConfig, { UserConfig } from '../config/userConfig';
-import { readTextFile, BaseDirectory, writeTextFile, mkdir, exists } from '@tauri-apps/plugin-fs';
+import { readTextFile, BaseDirectory, mkdir, exists } from '@tauri-apps/plugin-fs';
 import { Dialog } from 'react-vant';
+import fs from './fs';
 
 const preferenceUtils = {
     // 读取用户配置
@@ -25,7 +26,7 @@ const preferenceUtils = {
             // 充满名目录
             await this.mkRootDir()
             // 写文件的到该目录
-            await writeTextFile('my_diary/config.json', JSON.stringify(data), { baseDir: BaseDirectory.AppData });
+            await fs.writeTextToFile('my_diary/config.json', JSON.stringify(data));
         } catch (error) {
             console.error(error);
             Dialog.show({

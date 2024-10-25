@@ -4,9 +4,10 @@ import { Button, Cell, NavBar, Radio, SwipeCell } from 'react-vant';
 import Page from '../../../../components/Page';
 import { useNavigate } from 'react-router-dom';
 import { open } from '@tauri-apps/plugin-dialog';
-import { BaseDirectory, readDir, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readDir, readTextFile } from '@tauri-apps/plugin-fs';
 import preferenceUtils from '../../../../utils/prepferenceUtil';
 import { BrushO } from '@react-vant/icons';
+import fs from '../../../../utils/fs';
 // interface FormInter {
 //   selected_language: LanguageList
 // }
@@ -100,7 +101,7 @@ function RightDom() {
         return
       }
       // 保存到用户的theme文件夹内部
-      await writeTextFile('my_diary/theme/' + fileName, content, { baseDir: BaseDirectory.AppData })
+      await fs.writeTextToFile('my_diary/theme/' + fileName, content)
       let userConfig = await preferenceUtils.getUserConfig()
       userConfig.theme = fileName
       console.log(content);
